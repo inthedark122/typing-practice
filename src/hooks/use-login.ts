@@ -10,14 +10,14 @@ export type Credentials = {
 };
 
 export default function useLogin(credentials: Credentials | null): User | null {
-  const { loginService } = useContext(Services);
+  const { userService, loginService } = useContext(Services);
   const { dispatch, state = { user: null } } = useContext(LogedInUser);
 
   useEffect(() => {
     if (!credentials || !dispatch) {
       return;
     }
-    loginService.login(credentials.email, credentials.password)
+    loginService.login(credentials.email, credentials.password, userService)
       .then((user: User) => dispatch!({ type: LogedInActionType.LOG_IN, payload: user }))
       .then(() => navigate("/"))
       .catch(e => alert(e.message));
